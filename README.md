@@ -1,5 +1,5 @@
 ## My-Little-Library
-This is a simple file-based Library Management System built in C using structured data and modular functions and it can be extended using data structures for optimization
+This is a simple file-based Library Management System built in C using structured data and modular functions and it can be extended using data structures for optimization.
 
 ## Features of MY Little Library
 - Membership
