@@ -1,8 +1,8 @@
-  My-Little-Library
- Little free library
-Your Cozy Little Corner
+## My-Little-Library
+   Little Free Library
+   Your Cozy Little Corner
 
-This is a simple file-based library management system built in C using structured data and modular functions and it can be extended using data structures for optimization
+This is a simple file-based Library Management System built in C using structured data and modular functions and it can be extended using data structures for optimization
 
 ## Features of MY Little Library
 - Membership
