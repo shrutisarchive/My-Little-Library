@@ -24,7 +24,6 @@ My Little Library:
 - README.md
 
 How to run
-bash
 cd source
 gcc main.c functions.c -o run
 ./run
