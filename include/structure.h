@@ -13,7 +13,7 @@ struct user {
 
 // books data
 struct books {
-    int book_id;
+    char book_id[10];
     char book_name[50];
     int available; // availability of books show karne k liye 0/1
 };
@@ -24,5 +24,11 @@ struct issue {
     int book_id;
     int status; // return status update karne k liye
 };
+
+void generateMemberID(char member_id[]);
+void registerUser();
+void initializeBooks();
+void viewBooks();
+void issueBook(char member_id[]);
 
 #endif

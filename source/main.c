@@ -9,6 +9,14 @@ void loginUser();
 int choice;
 int main() {
     srand(time(0));
+
+    FILE *fp = fopen("../data/books.txt", "r");
+    
+    if(fp == NULL) {
+        initializeBooks();
+    } else {
+        fclose(fp);
+    }
     while(1) {
         printf("\nWelcome To My Little Library\n");
         printf("1. Login\n");

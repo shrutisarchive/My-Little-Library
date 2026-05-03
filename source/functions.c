@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "../include/structure.h"
 #include <string.h>
-void generateMemberID(char member_id[]);
+
 // user register karne k time call hoga
 void registerUser() {
     struct user u;
@@ -102,7 +102,8 @@ rewind(fp);
 
             switch(choice) {
                 case 1:
-                printf("BOOKS\n");
+                viewBooks();
+                issueBook(member_id);
                 break;
 
                 case 2:
@@ -129,4 +130,110 @@ rewind(fp);
     }
 
     fclose(fp);
+}
+
+// books ka data joki system ka hai
+void initializeBooks() {
+    FILE *fp = fopen("../data/books.txt", "w");
+    fprintf(fp, "B001 The_Alchemist 1\n");
+    fprintf(fp, "B002 The_Midnight_Library 1\n");
+    fprintf(fp, "B003 Namesake 1\n");
+    fprintf(fp, "B004 Secret_History 1\n");
+    fprintf(fp, "B005 Better_Than_The_Movies 1\n");
+    fprintf(fp, "B006 Human_Acts 1\n");
+    fprintf(fp, "B007 Welcome_To_The_Hyunam_Dong_Bookshop 1\n");
+    fprintf(fp, "B008 The_Cat_Who_Saved_The_Library 1\n");
+    fprintf(fp, "B009 The_Book_Theif 1\n");
+    fprintf(fp, "B010 All_The_Light_We_Cannot_See 1\n");
+    fprintf(fp, "B011 A_Novel_Love_Story 1\n");
+    fprintf(fp, "B012 Kafka_On_The_Shore 1\n");
+    fprintf(fp, "B013 The_Dead_Romantics 1\n");
+    fprintf(fp, "B014 The_Colour_Purple 1\n");
+    fprintf(fp, "B015 Tuesdays_With_Moorie 1\n");
+
+    fclose(fp);
+}
+
+// books ko terminal pr print karne k liye
+void viewBooks() {
+    FILE *fp = fopen("../data/books.txt", "r");
+
+    if (fp == NULL) {
+        printf("No books available!\n");
+        return;
+    }
+
+    struct books b;
+
+    printf("\n                  AVAILABLE BOOKS                  \n");
+    printf("%-10s %-35s %-10s\n", "ID", "Name", "Status");
+    printf("------------------------------------------------------------\n");
+
+    while (fscanf(fp, "%s %s %d", b.book_id, b.book_name, &b.available) != EOF) {
+
+        printf("%-10s %-35s ", b.book_id, b.book_name);
+
+        if (b.available == 1)
+            printf("Available\n");
+        else
+            printf("Issued\n");
+    }
+
+    printf("\n");
+
+    fclose(fp);
+}
+
+// issue karne time
+void issueBook(char member_id[]) {
+    char book_id[10];
+    printf("Enter Book ID: ");
+    scanf("%s", book_id);
+
+    FILE *fp = fopen("../data/books.txt", "r");
+    FILE *temp = fopen("../data/temp.txt", "w");
+
+    if(fp == NULL || temp == NULL) {
+        printf("Error opening file!");
+        return;
+    }
+
+    struct books b;
+    int found = 0;
+
+    while(fscanf(fp, "%s %s %d", b.book_id, b.book_name, &b.available) != EOF) {
+        
+        // book match
+        if(strcmp(b.book_id, book_id) == 0) {
+            found = 1;
+            // book match hone k baad availability check kar rahe
+            if(b.available == 1) {
+                printf("Book Issued\n");
+
+                b.available = 0; // availability update
+
+                // issued.txt mei entry
+                FILE *issued = fopen("../data/issued.txt", "a");
+                fprintf(issued, "%s %s\n", member_id, book_id);
+                fclose(issued);
+            } else {
+                printf("Book Already Issued!!\n");
+            }
+        }
+
+        // temp file mei likh rahe ab
+
+        fprintf(temp, "%s %s %d\n", b.book_id, b.book_name, b.available);
+    }
+    fclose(fp);
+    fclose(temp);
+
+    // replace original file (books.txt)
+
+    remove("../data/books.txt");
+    rename("../data/temp.txt", "../data/books.txt");
+
+    if(!found) {
+        printf("Book Not Found!!");
+    }
 }
