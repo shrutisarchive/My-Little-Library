@@ -114,11 +114,12 @@ rewind(fp);
                 break;
 
                 case 3:
-                printf("MY RECORD\n");
+                printf("\n");
+                myRecord(member_id);
                 break;
 
                 case 4:
-                printf("Logged Out Successfully!! Happy Reading~~\n");
+                printf("\nLogged Out Successfully!! Happy Reading~~\n");
                 return;
 
                 default:
@@ -312,4 +313,68 @@ void returnBook(char member_id[]) {
     printf("\n");
     printf("Book Returned Successfully!\n");
     printf("\n");
+}
+
+void myRecord(char member_id[]) {
+
+    printf("\n");
+    printf("    MY LITTLE LIBRARY\n");
+    printf("  Your Cozy Little Corner\n");
+    printf("\n");
+    printf("       MEMBER CARD   \n");
+    printf("\n");
+
+    // getting member name
+    FILE *user = fopen("../data/user.txt", "r");
+    char name[50], contact[15], mem_id[11], pass[20];
+    int userFound = 0;
+
+    while (fscanf(user, "%s %s %s %s", name, contact, mem_id, pass) != EOF) {
+        if (strcmp(mem_id, member_id) == 0) {
+            printf("\nName      : %s\n", name);
+            printf("Member ID : %s\n", member_id);
+            userFound = 1;
+            break;
+        }
+    }
+    fclose(user);
+
+    if (!userFound) {
+        printf("User not found!\n");
+        return;
+    }
+
+    // books issued data
+    FILE *fp = fopen("../data/issued.txt", "r");
+
+    if(fp == NULL) {
+        printf("No records found!");
+        return;
+    }
+
+    char m_id[11];
+    char b_id[10];
+    int found = 0;
+
+    printf("\n~~Your Issued Books~~\n");
+    printf("\n");
+
+    while(fscanf(fp, "%s %s", m_id, b_id) != EOF) {
+
+        if(strcmp(m_id, member_id) == 0) {
+            printf("%s\n", b_id);
+            found = 1;
+        }
+
+        
+    }
+
+    printf("\n");
+
+    if(!found) {
+        printf("\nNo books issued by you!\n");
+        printf("\n");
+    }
+
+    fclose(fp);
 }

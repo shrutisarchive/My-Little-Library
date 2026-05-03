@@ -30,5 +30,6 @@ void initializeBooks();
 void viewBooks();
 void issueBook(char member_id[]);
 void returnBook(char member_id[]);
+void myRecord(char member_id[]);
 
 #endif
