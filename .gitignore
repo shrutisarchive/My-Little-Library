@@ -1,5 +1,4 @@
 *.exe
 *.o
 *.out
-data/user.txt
-data/issued.txt
+data/
