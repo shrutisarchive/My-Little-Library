@@ -54,7 +54,7 @@ void loginUser() {
     printf("\n");
     printf("Enter your Member ID: ");
     scanf("%s", input_id);
-    printf("Enter your password: ");
+    printf("Enter your Password: ");
     scanf("%s", input_pass);
 
     FILE *fp;
@@ -85,6 +85,7 @@ rewind(fp);
         if(strcmp(input_id, member_id) == 0 && strcmp(input_pass, password) == 0) {
             found = 1;
             printf("\nLogin Successful!! Welcome %s\n", name);
+            printf("\n");
             break;
         }
     }
@@ -97,6 +98,7 @@ rewind(fp);
             printf("3. My Record\n");
             printf("4. Logout\n");
 
+            printf("\n");
             printf("What would you like to do? ");
             scanf("%d", &choice);
 
@@ -107,7 +109,8 @@ rewind(fp);
                 break;
 
                 case 2:
-                printf("RETURN\n");
+                printf("\n");
+                returnBook(member_id);
                 break;
 
                 case 3:
@@ -189,6 +192,7 @@ void issueBook(char member_id[]) {
     char book_id[10];
     printf("Enter Book ID: ");
     scanf("%s", book_id);
+    printf("\n");
 
     FILE *fp = fopen("../data/books.txt", "r");
     FILE *temp = fopen("../data/temp.txt", "w");
@@ -208,7 +212,8 @@ void issueBook(char member_id[]) {
             found = 1;
             // book match hone k baad availability check kar rahe
             if(b.available == 1) {
-                printf("Book Issued\n");
+                printf("%s Book Issued\n", b.book_id);
+                printf("--------------------\n");
 
                 b.available = 0; // availability update
 
@@ -236,4 +241,75 @@ void issueBook(char member_id[]) {
     if(!found) {
         printf("Book Not Found!!");
     }
+}
+
+// return book 
+void returnBook(char member_id[]) {
+    char book_id[10];
+    printf("Enter the Book ID to return: ");
+    scanf("%s", book_id);
+
+    FILE *issued = fopen("../data/issued.txt", "r");
+    FILE *tempIssued = fopen("../data/tempIssued.txt", "w");
+
+    if(issued == NULL || tempIssued == NULL) {
+        printf("Error Opening Issued File!!\n");
+        return;
+    }
+
+    struct returnBook r;
+    int found = 0;
+
+    // issued.txt check karenge pehle
+
+    while(fscanf(issued, "%s %s", r.member_id, r.book_id) != EOF) {
+        if(strcmp(r.member_id, member_id) == 0 && strcmp(r.book_id, book_id) == 0) {
+            found = 1;
+            continue; // entry delete ho jaega
+        }
+
+        fprintf(tempIssued, "%s %s\n", r.member_id, r.book_id);
+    }
+
+    fclose(issued);
+    fclose(tempIssued);
+
+    remove("../data/issued.txt");
+    rename("../data/tempIssued.txt", "../data/issued.txt");
+
+    if(!found) {
+        printf("\n");
+        printf("No such book Issued by You!\n");
+        printf("\n");
+        return;
+    }
+
+    // books.txt update hoga ab
+
+    FILE *fp = fopen("../data/books.txt", "r");
+    FILE *temp = fopen("../data/temp.txt", "w");
+
+    if (fp == NULL || temp == NULL) {
+        printf("Error opening books file!\n");
+        return;
+    }
+
+    struct books b;
+
+    while(fscanf(fp, "%s %s %d", b.book_id, b.book_name, &b.available) != EOF) {
+        if(strcmp(b.book_id, book_id) == 0) {
+            b.available = 1;
+        }
+        fprintf(temp, "%s %s %d\n", b.book_id, b.book_name, b.available);
+    }
+
+    fclose(fp);
+    fclose(temp);
+
+    remove("../data/books.txt");
+    rename("../data/temp.txt", "../data/books.txt");
+
+    printf("\n");
+    printf("Book Returned Successfully!\n");
+    printf("\n");
 }

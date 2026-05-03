@@ -19,10 +19,12 @@ int main() {
     }
     while(1) {
         printf("\nWelcome To My Little Library\n");
+        printf("\n");
         printf("1. Login\n");
         printf("2. Register\n");
         printf("3. Exit\n");
-
+        
+        printf("\n");
         printf("What would you like to do? ");
         scanf("%d", &choice);
         printf("\n");
